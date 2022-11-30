@@ -1,0 +1,77 @@
+Database & MySql --10
+
+Database 
+    Data : adalah representasi fakta di dunia nyata.
+            Misalkan data Mahasiswa.
+                Pasti memiliki nama dan nama mahasiswa itu adalah data,
+                               npm dan npm mahasiswa itu juga data, dll.
+    
+    Jadi Database adalah data di dalam DBMS.
+    DBMS (Database Management Sistem) Software untuk mengelola database:
+    > Oracle
+    > MySql         ==========> Dipelajari
+    > SQL Server
+    > PostgreSQL
+    > MongoDB
+
+    Jenis Jenis DBMS :
+    > Relational DBMS (RDBMS)
+    > Hierarchical DBMS
+    > Networdk DBMS
+    > NoSQL DBMS
+
+    PRIMARY KEY (Kunci utama)
+    = "Sebuah data, yang merepresentasikan satu baris record secara unik."
+
+    Istilah Database
+    > Field / Column
+    > Row
+    > Key
+        > Primary Key
+        > Foreign Key
+    > Auto Increment (fitur dari database untuk menambah nilai 1/1 tiap record)
+    > Relationship (hubungan antar tabel)
+    > Normalization (normalisasi)
+
+
+========== CMD ==========
+cd..
+cd C:\xampp\mysql\bin
+mysql -u root -p                (Masuk sebagai Admin)
+
+create database phpLatihan;
+
+    Note :
+    Nama Database phpLatihan
+    Nama Tabel mahasiswa
+
+        > id int primary key auto_increment
+        > nama varchar (100)
+        > npm char (10)                     (diberi char karena nilai nya pasti)
+        > email varchar (100)
+        > jurusan varchar (100)
+        > gambar varchar (100)
+
+use phpLatihan;
+create table mahasiswa (
+    -> id int primary key auto_increment,
+    -> nama varchar(100),
+    -> npm char(10),
+    -> email varchar(100),
+    -> jurusan varchar(100),
+    -> gambar varchar(100)
+    );
+show tables;                                        (menampilkan table)
+describe mahasiswa;                                 (menampilkan isi struktur table di table mahasiswa)
+insert into mahasiswa values ('', 'Luthfi Nur Ramadhan', '2142430', 'luthfiramadhan.lr55@gmail.com', 'Teknik Informatika', 'Izuchii.jpg');
+select * from mahasiswa;                            (menampilkan data di dalam tabel mahasiswa)
+
+
+select nama, npm from mahasiswa;                    (menampilkan data nama dan npm saja di tabel mahasiswa)
+select * from mahasiswa where npm = "1942430";      (menampilkan data yang memiliki npm 1942430)
+update mahasiswa set gambar = "Izuchii1311.jpg" where id = 3;
+                                                    (merubah data nama gambar pada id ke 3)
+delete from mahasiswa where id = 4;                 (menghapus data)
+
+drop table mahasiswa;                               (menghapus tablenya)
+drop database phpLatihan;                           (menghapus database)

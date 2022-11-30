@@ -1,0 +1,97 @@
+Function -- 6
+
+Function adalah potongan program atau baris baris kode yang dibuat untuk mempermudah pada saat memprogram.
+Kode program tersebut bisa kita beri nama lalu bisa dipanggil berulang ulang
+
+Ada 2 Jenis Function di PHP
+
+1. Built-in-Function (Fungsi yang sudah disediakan oleh PHP)
+    link function php : http://php.net/manual/en/funcref.php
+    
+    > Date / Time
+        1. time()
+            Contoh:
+                <?php
+                    echo time();
+                ?>
+
+                *UNIX time stamp (asal mula waktu di dunia IT / detik yang sudah berlalu sejak 1 January 1970)
+
+        2. date()
+            Contoh :
+                <?php
+                    echo date("l-d-M-y");  
+                ?>
+
+                *memanggil function di dalam php untuk mengelola tanggal
+                l = hari
+                d = tanggal
+                m = bulan (angka)
+                M = bulan
+                y = tahun   
+        
+        3. mktime()
+            Contoh :
+                <?php
+                    echo mktime(0,0,0,11,13,2002);
+                ?>
+
+                *MKTIME (membuat detik sendiri)
+                Parameter mktime()
+                (jam, menit, detik, bulan, tanggal, tahun)
+
+        4. strtotime()
+            Contoh : 
+                <?php
+                    echo strtotime("13 nov 2022");
+                ?>
+
+                *STRTOTIME
+                Merubah memasukkan format tanggal yang akan diubah menjadi detik
+
+
+    > Function yang akan sering dipake
+        1. String
+            > strlen()              = untuk menghitung panjang dari sebuah String
+            > strcmp()              = untuk membandingkan 2 buah String
+            > explode()             = untuk memecah sebuah String menjadi Array
+            > htmlspecialchars()    = untuk menjaga password menjadi angka random
+
+        2. Utility (Fungsi Bantuan)
+            > var_dump()            = untuk debugging / mencetak isi dari variabel, array, object
+            > isset()               = untuk mengecek apakah sebuah variabel sudah pernah dibikin atau belum
+            > empty()               = untuk mengecek variabel yg kita masukkan ada isinya atau ngga
+            > die()                 = untuk memberhentikan baris program sehingga baris di bawahnya tidak akan di eksekusi
+            > sleep()               = untuk memberhentikan sementara, atau diberi sleep misalkan selama 2 detik
+
+
+
+2. User-Defined Function (Fungsi yang dibikin sendiri)
+    Saat membuat function kita sendiri, fungsinya harus didefinisikan terlebih dahulu
+    Pertama Membuat Function dengan contoh nama salam, yang dimana akan menampilkan nilai
+    return "Selamat ...."
+    Kemudian function salam diberikan sebuah parameter $waktu dengan default = "Datang" dan $nama dengan default = "Admin"
+    jika parameter tidak di isi
+    Untuk mengisikan parameternya cukup dengan
+    <?php echo salam("Pagi", "Luthfi"); ?>
+
+        <?php
+            function salam ($waktu = "Datang", $nama = "Admin"){
+                return "Selamat $waktu, $nama!";
+            }
+        ?>
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <title>Function</title>
+        </head>
+        <body>
+            <h1><?php echo salam("Pagi", "Luthfi"); ?></h1>
+        </body>
+        </html>
+
+
+Catatan : 
+echo : menampilkan apa yang ingin dicetak
+return : mengembalikan apa yang ingin di cetak

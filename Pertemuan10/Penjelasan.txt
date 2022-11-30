@@ -1,0 +1,165 @@
+CRUD --12
+
+( Create, Read, Update, Delete )
+
+Menambah Fungsi Tambah Data Mahasiswa 
+
+    1. Membuat Hyperlink "Tambah Data Mahasiswa" yang akan diarahkan ke halaman Tambah.php
+
+    2. Membuat Halaman Tambah.php
+
+    3. Membuat Form
+
+    4. Cek Apakah tombol submit sudah pernah di klik atau belum
+
+        Apakah $_POST - elemen yang berada di dalam form dengan method post dengan keynya submit berarti button 
+        jika dipencet maka di dalam array assosiatif $_POST akan dibuat sebuah elemen yang keynya submit
+
+        Jika dipencet, Ambil semua data di dalam form masukkan ke dalam database 
+
+        if (isset ($_POST["submit"])){
+
+        }
+    
+    5. Lakukan koneksi ke database
+
+        $conn = mysqli_connect("localhost", "root", "", "phplatihan");
+
+    6. Ambil data dari tiap element di dalam form
+
+        $nama = $_POST["nama"];
+        $npm = $_POST["npm"];
+        $email = $_POST["email"];
+        $jurusan = $_POST["jurusan"];
+        $gambar = $_POST["gambar"];
+
+    7. Query insert data
+        $query = "INSERT INTO mahasiswa VALUES('', '$nama' , '$npm' , '$email' , '$jurusan' , '$gambar')";
+        mysqli_query($conn, $query);
+
+        *Pertama panggil fungsi mysqli_query hubungkan dengan koneksi, dan hubungkan dengan variabel $query
+        $query isinya untuk memasukkan data ke dalam tabel mahasiswa dan hubungkan dengan no 6
+
+    8. Cek data apakah berhasil ditambahkan atau tidak 
+        Menggunakan fungsi mysqli_affected_rows() jika data berhasil ditambahkan maka akan menampilkan angka 1
+        jika tidak maka akan menampilkan angka -1
+        jika ingin menampilkan angkanya maka lakukan dengan var_dump(mysqli_affected_rows($conn));
+        dan menggunakan var_dump hanya untuk melakukan debugging
+
+        if (mysqli_affected_rows($conn) > 0) {
+            echo "Berhasil";
+        } else {
+            echo "Gagal!!";
+            echo "<br>";
+            mysqli_error($conn);
+        }
+
+        *Jika hasil dari mysqli_affected_rows adalah lebih dari 1 maka tampilkan berhasil, tetapi jika tidak tampilkan Gagal
+
+
+
+        ====== MEMBUAT SOURCE CODE MENJADI MODULAR ======
+
+    9. Membuat Function Tambah
+
+    10. No 6 di halaman Tambah.php di cut dan dipindahkan ke dalam function di dalam halaman Functions.php
+
+    11. No 7 di halaman Tambah.php di cut dan dipindahkan ke dalam function di dalam halaman Functions.php
+
+    12. Di halaman Tambah.php Hapus 
+
+            // 5. Lakukan Koneksi
+            $conn = mysqli_connect("localhost", "root", "", "phplatihan");
+
+    13. Di Halaman Functions.php di dalam fungsi Tambah
+
+            Melakukan return yang diambil dari mysqli_affected_rows Penjelasan sama seperti no 8
+            return mysqli_affected_rows($conn);
+
+    14. Di Halaman Tambah.php Hapus
+
+            // 8. Cek data apakah berhasil ditambahkan atau tidak 
+            // menggunakan fungsi mysqli_affected_rows() 
+            if (mysqli_affected_rows($conn) > 0) {
+                echo "Berhasil";
+            } else {
+                echo "Gagal!!";
+                echo "<br>";
+                mysqli_error($conn);
+            }
+
+
+            dan ganti
+
+             if( isset($_POST["submit"]) ) {
+                if ( tambah($_POST) > 0) {
+                    echo 
+                    "<script>
+                        alert('Data Berhasil Ditambahkan');
+                        document.location.href = 'Index.php';
+                    </script>";
+                } else {
+                    echo 
+                    "<script>
+                        alert('Data Gagal Ditambahkan');
+                        document.location.href = 'Index.php';
+                    </script>";
+                } 
+            }
+
+
+        *jika data di dalam halaman Tambah.php berhasil di tambahkan maka kirimkan data ke dalam function tambah
+        yang berada di dalam halaman Functions.php
+        maka oleh fungsi tambah data akan ditangkap, dimasukkan ke dalam database.
+        Jika mysqli_affected_rows > 1 maka data berhasil ditambahkan
+        dan sebelumnya panggil require "Functions.php";
+        agar fungsi fungsi dapat dipanggil dan dijalankan
+
+    15. Menambahkan Require di [Tambah.php]
+
+    16. Menambah kan required pada Inputannya di halaman [Tambah.php]
+        Agar form yang tidak terisi akan menampilkan warning dan harus diisi terlebih dahulu
+
+    17. Di dalam [Functions.php] 
+        saat pemanggilan data dari setiap element berikan sebuah fungsi yaitu htmlspecialchars 
+
+        contoh :         $gambar = htmlspecialchars($data["gambar"]);
+
+        *fungsinya agar di dalam form kita tidak bisa memasukkan html charachter yang akan merusak sistem
+        mengolah data agar char html tidak berjalan, jika ada user yg mencoba memasukkan karakter html
+
+    18. Di dalam [Index.php]
+        menjalankan fungsi hapus dengan cara di dalam hrefnya memberikan
+
+        <a href="Hapus.php?id=<?=$mhs["id"]?>">DELETE</a>   
+
+        *maka ketika tag a diklik pindahkan / panggil halaman Hapus.php dengan memberi tahukan data yang mau dihapus
+        ? digunakan untuk memberitahukan data mana.
+
+    19. Membuat variabel id untuk menangkap variabel id dari urlnya [Functions.php]
+            
+            $id = $_GET["id"];
+
+    20. Di dalam halaman [Hapus.php]
+
+        if ( hapus($id) > 0) {
+            echo 
+            "<script>
+                alert('Data Berhasil Dihapus');
+                document.location.href = 'Index.php';
+            </script>";
+            } else {
+                echo 
+                "<script>
+                    alert('Data Gagal Dihapus');
+                    document.location.href = 'Index.php';
+                </script>";
+            }
+
+        *Memberikan informasi jika data telah dihapus
+
+    21. Di dalam halaman [Hapus.php]
+        panggil require "Functions.php";
+
+
+

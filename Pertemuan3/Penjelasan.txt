@@ -1,0 +1,91 @@
+Strukutur Kendali - 5
+
+Control Flow / Strukutur Kendali = bagaimana alur ketika program kita dibaca oleh interpreter PHP.
+
+Normalnya Strukutur Kendali dibacanya dari atas ke bawah, dari kiri ke kanan
+
+Mengatur Control Flow untuk mengatur alur pembacaan codenya.
+
+> Pengulangan
+    * melakukan pengulangan tanpa menuliskan ulang Scriptnya
+    
+    1. for
+        Contoh :
+            for($i = 0; $i < 5; $i++) {
+                echo "Hello World!";
+            }
+            
+            *(inisialisasi, kondisi terminasi, increment/decrement)
+            inisialisasi membuat variabel dan variabel diawali dengan angka awal
+            terminasi selama $i lebih kecil dari 5 maka lakukan perulangan terus menerus
+            increment supaya $i nya nambah terus hinggga angka yang telah ditentukan di terminasi
+            dan di dalam echonya diberikan apa yang akan diulang
+
+
+    2. while
+        Contoh : 
+            $i = 2;
+            while( $i < 5){
+                echo "Hello World!";
+                $i++;
+            }
+
+            *"Cek dulu kondisi ketika true maka jalankan block"
+            Selama kondisinya bernilai true maka lakukan yang ada di dalam bracket atau { }
+            karena $i adalah 2 maka agar $i tidak lebih dari 5 yaitu sisa 3 
+            maka yang akan di tampilan adalah Hello World! sebanyak 3x  
+
+
+    3. do while
+        Contoh :
+            $i = 0;
+            do {
+                echo "Hello World!";
+                $i++;
+            } while ($i < 5);
+
+            *Lakukan hal ini selama kondisi bernilai true / jalankan dulu baru cek kondisinya
+
+
+            #
+            Perbedaan While dan Do While
+            Do While ketika kondisinya bernilai false maka blocknya akan dijalankan dulu 1x
+            sedangkan while blocknya tidak akan dijalankan jika kondisinya false 
+
+
+    4. foreach
+
+> Pengkondisian 
+    1. if else
+        Contoh :
+            $x = 10;
+            
+            if ( $x < 20){
+                echo "Anda Benar";
+            } else {
+                echo "Anda Salah";
+            }
+
+            *if(kondisi yang akan kita cek)
+            jika true maka lakukan apa yang ada di dalam block kurung kurawal
+            jika salah maka else tampilkan output yang salah
+
+
+    2. if else if else
+        Contoh :
+            $x = 20;
+            
+            if ($x < 20){
+                echo "Anda Benar";
+            } else if ($x == 20){
+                echo "Nilai Pas";
+            } else {
+                echo "Anda Salah";
+            } 
+
+            *Tidak berbeda jauh dengan if else
+
+
+    3. ternary (operator untuk menggantikan syntax if dan else)
+    
+    4. switch

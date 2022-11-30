@@ -1,0 +1,31 @@
+Array Multidimensi --8
+
+Array : Adalah sebuah variabel yang bisa memiliki banyak nilai.
+Array Numerik : Adalah Array yang Indexnya Angka.
+Array Assosiatif : Adalah Array yang indexnya kita berikan Sendiri.
+Pemanggilan Array direcomendasikan menggunakan ForEach
+
+Array Assosiatif 
+    Indexnya kita berikan sendiri seperti :
+        
+        $mahasiswa = ["nama" => "Luthfi Nur Ramadhan"];
+
+        echo $mahasiswa ["nama"];
+
+    *index yang dibuat sekarang menjadi mempunyai nama yaitu "nama", sedangkan sebelumnya di Array Numerik nama Luthfi Indexnya masih berupa Angka yaitu Index "0"
+    Cara Pemanggilannya juga dengan panggil Variabel Arraynya lalu panggil Index yang telah dibuat dengan menggunakan String.
+
+
+    Buat Folder Image dan Berikan Gambar di dalam Folder
+    di Dalam Array buat Key dan Valuenya
+        Misal :
+
+        ...
+        "gambar" => "Hutao.jpg"
+        ...
+
+    Panggil menggunakan tag img 
+    Lalu arahkan ke folder dan panggil Index gambar dari Arraynya
+        Misal :
+
+        <img src="img/<?= $mhs["gambar"]; ?>" alt="" width="40px" height="70px">

@@ -1,0 +1,33 @@
+PDF REPORTING --23
+
+Merubah Script PHP menjadi PDF
+> Laporan
+> Kuitansi / invoice / faktur
+> Form isian
+> ...
+
+Membuat PDF
+> Memanfaatkan fitur bawaan browser [Dicoba]
+> Library PHP
+    1. FPDF
+    2. mPDF [Dicoba]
+    3. DOMPDF
+    4. ...
+
+
+Cara pertama menggunakan fitur bawaan browser
+1. Buka Website
+2. Klik kanan lalu pilih 'Print'
+    *hasil print sama persis dengan yang berada di halaman website
+
+Cara kedua menggunakan Library PHP - mPDF
+1. Menambahkan CSS dan memberikan class di bagian yang ingin dihilangkan
+        
+        @media print {
+            .logout, .tambah, .search, .aksi {
+                display: none;
+            }
+        }
+
+    Penjelasan :
+    Memberikan class pada element yang tidak ingin ditampilkan ketika di print.

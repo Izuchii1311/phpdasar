@@ -1,0 +1,62 @@
+CRUD --14
+
+SEARCHING -- BAGIAN DARI CRUD yaitu READ
+
+1. Membuat Form Pencarian
+
+    <form action="" method="post">
+        <input type="text" name="keyword" size="40" autofocus placeholder="Cari Data">
+        <button type="submit" name="search">Search</button>
+    </form>
+
+    Penjelasan : 
+        size = untuk mengatur ukuran input
+        autofocus = agar user dapat langsung melakukan pencarian ketika page baru dibuka
+        autocomplete = untuk mematikan history pengetikan di inputan
+        placeholder = untuk memberikan bayangan atau nama bayangan di dalam inputan
+        require = untuk memberikan validasi pada inputan
+        name = untuk memberikan nama inputan
+        type = untuk memberikan jenis tipe inputan 
+
+2. Di halaman Index.php buat logic pencarian
+
+    if( isset($_POST["cari"]) ){
+        $mahasiswa = search($_POST["keyword"]);
+    }
+
+    Penjelasan :
+        Jika tombol cari diklik maka cari mahasiswa berdasarkan keyword yang ditekan.
+        dan data $mahasiswa akan diganti diisi dengan $_POST["keyword"]
+        jadi nanti $mahasiswa akan berisi hasil dari data pencarian dari function search.
+        dan function search mendapatkan data dari keyword
+
+        ketika button dengan nama cari dipencet, ambil apapun yang diketikkan oleh user dan masukkan ke function cari
+
+3. Function Search
+
+    function search($keyword){
+        $query = "SELECT * FROM mahasiswa WHERE
+                    nama = '$keyword',
+                    ";
+
+        return query($query); 
+        
+    }
+
+    Penjelasan :
+        Maka function search akan berjalan, misalkan keywordnya Izuchii.
+        buat string $query yang mengambil data nama berdasarkan keyword
+        lalu kembalikan hasilnya berupa array assosiatif dan masukkan ke dalam $mahasiswa
+        maka sekarang isi dari $mahasiswanya adalah hasil pencarian dari keyword
+        dan data tersebut harus sama persis dengan db
+
+    
+    ubah menjadi 
+
+                $query = "SELECT * FROM mahasiswa WHERE
+                    nama LIKE '$keyword%' OR
+                    npm LIKE '$keyword%' OR
+                    email LIKE '$keyword%'
+                    ";
+
+        jadi ketika baru mencari izu data Izuchii akan ditampilkan, dan dapat menampilkan hasil pencarian berdasarkan npm dan juga email

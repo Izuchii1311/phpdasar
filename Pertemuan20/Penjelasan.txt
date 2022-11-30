@@ -1,0 +1,51 @@
+LIVE SEARCH JQuery(Latihan 17 dan Latihan 19) --21
+
+Live Search : Fitur pencarian yang hasilnya ditampilkan secara langsung.
+
+NOTE : Jika menggunakan javascript biasakan disimpan di paling bawah sebelum tutup body
+
+
+1. Melakukan Include JQuery dan javascript -- Index.php
+
+        <script src="js/jquery-3.6.1.min.js"></script>
+        <script src="js/script.js"></script>
+
+    Penjelasan :
+    Include untuk memanggil dan menghubungkan file dengan file javascript.
+
+
+2. Buat script.js seperti code berikut -- script.js
+
+        $(document).ready(function(){
+
+            $('#tombol-cari').hide();
+
+            $('#keyword').on('keyup', function(){
+                $('.loader').show();
+
+                $.get('ajax/mahasiswa.php?keyword=' + $('#keyword').val(), function(data){
+                $('#container').html(data);
+
+                $('.loader').hide();
+            });
+        });
+    });
+
+    Penjelasan : 
+    > jQuery tolong ambilkan document (document yang telah dihubungkan dengan tag script), lalu ketika document     tersebut telah siap maka jalankan function berikut 
+        > jQuery tolong tombol cari dihide
+        > jQuery tolong ketika user memasukkan keyword (input dengan id keyword)  .
+        ketika di keyup(setelah mengetik, maka jalankan fungsi berikut) 
+            > jQuery tolong tampilkan animasi loading, ketika user telah memasukkan input di #keyword
+            > AJAX jQuery tolong kirim dan ambil data dari mahasiswa.php ketika user melakukan pencarian dengan value apapun, jika benar maka jalankan function berikut
+                > jQuery tolong carikan container jika ada gantikan dengan fungsi yang diambil dari data di Functions.php
+                > jQuery jika user selesai mengetikkan sesuatu maka di hide kembali
+
+
+
+3. Loader -- Index.php
+
+            <img src="img/Gif/Load.gif" alt="" class="loader">
+
+    Penjelasan :
+    Untuk mengilangkan tombol cari dan menggantinya dengan loader ketika user mencari sesuatu

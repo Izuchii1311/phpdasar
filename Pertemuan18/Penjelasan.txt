@@ -1,0 +1,141 @@
+PAGINATION --20
+
+PAGINATION = adalah sebuah teknik untuk membatasi data yang tampil di halaman web menjadi beberapa halaman
+Akan menggunakan teknik keyword di dalam SQL yaitu LIMIT.
+
+1. Melakukan Configurasi PAGINATION
+
+        $jumlahDataPerHalaman = 2 ;
+
+    Penjelasan : 
+    Untuk menentukan apakah dalam 1 halaman ingin tampil berapa halaman. 
+    (Ini dilakukan sebelum querynya dipanggil)
+
+
+2. Menambahkan Keyword LIMIT
+
+        $mahasiswa = query ("SELECT * FROM mahasiswa LIMIT $awalData, $jumlahDataPerHalaman");
+
+    Penjelasan :
+    $mahasiswa = query ("SELECT * FROM mahasiswa);
+    yang asalnya pemanggilan query menampilkan semua data, 
+    sekarang diberi sebuah LIMIT untuk membatasi data yang tampil.
+
+    $mahasiswa = query ("SELECT * FROM mahasiswa LIMIT 0, 2");
+    LIMIT (nilai awal, data yang ingin ditampilkan)
+
+
+3. Menghitung jumlah Halaman
+
+        $result = mysqli_query ($conn, "SELECT * FROM mahasiswa");
+        $jumlahData = count(query("SELECT * FROM mahasiswa));
+        $jumlahHalaman = ceil($jumlahData / $jumlahDataPerHalaman);
+
+    Penjelasan :
+    > mysqli_query untuk menghitung ada berapa baris data di dalam database, data tersebut akan dimasukkan ke dalam array sementara.
+    > Panggil data dari mysqli_query yang terdapat array dari querynya kemudian masukkan ke dalam variabel $jumlahData,
+    beri function "count untuk menghitung data yang ada di dalam array querynya"
+    > Buat variabel baru untuk menghitung akan ada berapa jumlah halaman dari total semua data
+        $jumlahHalaman = ceil(jumlah data di database ( / dibagi) jumlah data per halamannya)
+                         jika jumlah data di database 6 ( / dibagi ) 2
+                         hasilnya akan ada 3 halaman
+
+        NOTE :
+        > Round : pembulatan ke bilangan terdekat
+        > Floor : pembulatan ke bilangan bawah berapa pun nilai pecahannya
+        > Ceil  : pembulatan ke bilangan atas berapa pun nilai pecahannya
+
+
+4. Halaman yang aktif (Untuk menentukan lagi di halaman berapa)
+
+        $halamanAktif = ( isset($_GET["halaman"])) ? $_GET["halaman"] : 1;
+
+    Penjelasan :
+    Mengambil dan diisi datanya dari url
+    Menggunakan cara Operator Ternary untuk melakukan cek halaman yang aktif data dari url
+    isset $_GET "halaman" jika kondisinya bernilai true maka halaman aktif diisi dengan $_GET "halaman",
+    tapi jika false diisi dengan angka 1 / halaman 1
+
+
+5. Menghitung Awal data
+
+        $awalData = ($jumlahDataPerHalaman * $halamanAktif) - $jumlahDataPerHalaman ;
+
+    Penjelasan :
+    $awalData = (2 * misal halaman 2) - 2;
+    $awalData = 4 - 2 = 2
+    Maka data awal di halaman 2 akan dimulai dari index ke 2
+
+
+6. Membuat Navigasi Link
+
+    // Prev Link
+    <?php if ($halamanAktif > 1) : ?>
+        <a href="?halaman=<?= $halamanAktif - 1; ?>" > &laquo; </a>
+    <?php endif; ?>
+
+    // Looping Link data
+    <?php for ($i = 1; $i <= $jumlahHalaman; $i++;) : ?>
+        <?php if ($i == $halamanAktif) : ?>
+            <a href="?halaman=<?= $i; ?>" style="font-weight: bold; color: red;"> <?= $i; ?> </a>
+        <?php else : ?>
+            <a href="?halaman=<?= $i; ?>" > <?= $i; ?> </a>
+        <?php endif; ?>
+    <?php endfor; ?>
+
+    // Next Link
+    <?php if ($halamanAktif < $jumlahHalaman) : ?>
+        <a href="?halaman=<?= $halamanAktif + 1; ?>" > &raquo; </a>
+    <?php endif; ?>
+
+
+    Penjelasan :
+    >> Prev Link
+        Jika halaman aktif > 1 (user berada di hal 2 ...)
+        maka mundurkan user 1x ke halaman sebelumnya
+
+    >> Looping Link data
+        Melakukan perulangan jika $i dimulai dari angka ke 1, $i kurang dari sama dengan $jumlahHalaman, maka $i++
+        maksudnya adalah data di database ada 6 dan setiap halaman diambil 2 data, maka panggil data harus kurang dari $jumlahHalaman
+        
+        jika $i == sama dengan $halamanAktif maka beri style css
+
+    >> Next Link
+        Jika $halamanAktif lebih kecil $jumlahHalaman
+        maka majukan user 1x ke halaman selanjutnya
+
+
+
+
+<!-- 6. Membuat Navigasi -->
+    <!-- Menghitung jumlah sebuah hyperlink dan dihitung dari $jumlahHalaman -->
+    <!-- tag a href di isi dengan Index.php?halaman=< ?= $i; ?> -->
+    <br><br>
+        <!-- Memberikan Pref -->
+        <!-- akan dimunculkan ketika halaman aktif lebih dari 1 -->
+        <?php  if ($halamanAktif > 1) : ?>
+            <a href="?halaman=<?= $halamanAktif-1; ?>">&laquo;</a>
+        <?php endif; ?>
+
+        <?php for($i = 1; $i <= $jumlahHalaman; $i++): ?>
+            <!-- Cek Halaman Aktif yang ditandai dengan Bold -->
+            <?php if( $i == $halamanAktif ): ?>
+                <!-- jika halaman aktif maka beri style css -->
+                <a href="?halaman=<?= $i; ?>" style="font-weight: bold; color: red;"><?= $i; ?></a>
+            <?php else: ?>
+                <!-- jika halaman tidak aktif jangan beri sytle css -->
+                <a href="?halaman=<?= $i; ?>"><?= $i; ?></a>
+            <?php endif; ?>
+        <?php endfor; ?>
+
+        <!-- Memberikan Next -->
+        <?php  if ($halamanAktif < $jumlahHalaman) : ?>
+            <a href="?halaman=<?= $halamanAktif+1; ?>">&raquo;</a>
+        <?php endif; ?>
+
+
+
+Target :
+1. Ketika User Berpindah Halaman Maka No urut halaman melanjutkan
+2. Membatasi PAGINATION
+3. Saat Melakukan Pencarian PAGINATION di perbaiki

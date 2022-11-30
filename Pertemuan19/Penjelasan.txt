@@ -1,0 +1,149 @@
+LIVE SEARCH AJAX(Latihan 17 dan Latihan 19) --21
+
+Live Search : Fitur pencarian yang hasilnya ditampilkan secara langsung.
+Menggunakan konsep AJAX (Asynchronous Javascript and XML).
+
+Apa itu AJAX?
+Asynchronous : bisa diartikan tidak sinkron
+                melakukan request ke server hanyasebagian kecil dari websitenya dan tidak perlu mengembalikan seluruh kontennya.
+Javascript dan XML : pada kita membuka sebuah website, pasti mempunyai sebuah request dan respon.
+                    pada kita membuka sebuah halaman itu artinya kita merequest isi ke server, dan server akan merespon.
+                    proses ini disebut sinkron.
+                    kenapa? karena kita meminta ke server dan server akan merefresh seluruh konten halamannya. 
+
+Object AJAX : XMLHttpRequest()
+
+AJAX
+> Javascript Dasar
+> DOM (Document Object Model) :: Memanipulasi Html di dalam website menggunakan Javascript
+        
+
+1. Include Javascript -- Index.php
+
+        <script src="js/script.js"></script>
+
+    Penjelasan :
+    Menginclude dan memanggil file Javascript. Disimpan di paling bawah karena supaya webnya di load terlebih dahulu,
+    kemudian dijalankan scriptnya.
+        Buat Folder Baru (js) dan isi file dengan nama (script.js)
+
+
+2. Memberikan Id -- Index.php
+
+        <form action="" method="post">
+            <input type="text" name="keyword" size="40" autofocus placeholder="Masukkan Keyword Pencarian..." autocomplete="off" id="keyword">
+            <button type="submit" name="search" id="tombol-cari">Search</button>
+        </form>
+
+    Penjelasan : 
+    Memberikan input = id keyword
+    Memberikan button = id tombol-cari
+
+
+3. Membungkus Table dengan div -- Index.php
+
+        <div id="container">
+            <table border="1" cellpadding="10" cellspacing="0">
+            ...
+
+            ...
+        </div>
+
+    Penjelasan :
+    Membungkus table dengan div dan beri id container
+
+
+4. Ambil element yang telah diberi id -- script.js
+
+        var keyword = document.getElementById('keyword');
+        var tombolCari = document.getElementById('tombol-cari');
+        var container = document.getElementById('container');
+
+    Penjelasan :
+    Karena telah dilakukan include javascript maka ambil element berdasarkan id dan masukkan ke dalam variabel.
+    variabel keyword diambil dari document yang telah dihubungkan yaitu Index.php dan ambil element dengan id keyword
+
+
+5. Membuat Event ketika Input diisi oleh user -- script.js
+
+        keyword.addEventListener('keyup', function() {
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState = 4 && xhr.status == 200){
+                    container.innerHTML = xhr.responseText;
+                }
+            }
+
+            xhr.open('GET', 'ajax/mahasiswa.php?keyword=' + keyword.value, true);
+            xhr.send();
+        });
+
+    Penjelasan :
+    > keyword.addEventListener('keyup', function()
+      variabel keyword (input) . jalankan sesuatu ketika('keyword telah dilepas' dan jalankan function) {
+
+        membuat object AJAX
+        var xhr = new XMLHttpRequest();
+
+        Cek kesiapan ajax di dalam function tersebut {
+            jika variabel xhr readyStatenya 4 maka ajax telah siap dan xhr 200 adalah sumber sudah ok
+        }
+
+        Melakukan eksekusi ajax
+        xhr.open(parameter1 GET/POST, parameter2 sumber dari mana, parameter3 synchronous(false)/asynchronous(true))
+        xhr.send untuk menjalankan AJAX dan mengambil data dari mahasiswa.php dan mengirimkan data
+      }
+
+
+6. Membuat folder ajax dan file mahasiswa.php 
+
+7. Data tabel ajax -- mahasiswa.php
+
+        <?php 
+            require '../Functions.php';
+
+            $query = "SELECT * FROM mahasiswa WHERE
+                            nama LIKE '$keyword%' OR
+                            npm LIKE '$keyword%' OR
+                            email LIKE '$keyword%' OR
+                            jurusan LIKE '$keyword%'
+                            ";
+            $mahasiswa = query($query);
+        ?>
+
+    Penjelasan : 
+    Hubungkan file dengan file Functions.php, lalu buat pemanggilan querynya yg
+
+
+8. Copy Table yang berada di Index.php -- mahasiswa.php
+
+        <table border="1" cellpadding="10" cellspacing="0">
+            ...
+
+            ...
+        </table>
+
+
+9. Tangkap data yang dikirimkan dari Index.php -- mahasiswa.php
+
+        <?php 
+            require '../Functions.php';
+
+            // 9.Tangkap data yang dikirimkan
+            $keyword = $_GET["keyword"];
+
+            $query = "SELECT * FROM mahasiswa WHERE
+                            nama LIKE '$keyword%' OR
+                            npm LIKE '$keyword%' OR
+                            email LIKE '$keyword%' OR
+                            jurusan LIKE '$keyword%'
+                            ";
+            $mahasiswa = query($query);
+
+        ?>
+
+    Penjelasan :
+    Menangkap data dari Index.php yang dimasukkan di inputan dengan id keyword kemudian jalankan $query pencarian
+    berdasarkan nama npm email dan jurusan.

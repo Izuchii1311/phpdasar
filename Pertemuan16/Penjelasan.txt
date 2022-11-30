@@ -1,0 +1,66 @@
+SESSION --18
+
+User tidak akan bisa mengakses halaman tertentu sebelum login terlebih dahulu
+
+Apa itu SESSION ? 
+Session itu adalah "Mekanisme penyimpanan informasi ke dalam variabel agar bisa digunakan di LEBIH DARI SATU HALAMAN"
+
+GET mengirimkan data melalui url form dan hanya 2 halaman/page.
+POST mengirimkan data melalui form dan hanya 2 halaman/page.
+SESSION data dapat digunakan disemua halaman.
+
+"Informasi di SESSION disimpan di dalam sebuah server".
+
+Perbedaan SESSION dan COOKIE
+Session data disimpen di server.
+Cookie data disimpen di local/browser.
+
+$_SESSION
+session_start();
+
+
+1. Di halaman Login.php Panggil session_start(); 
+
+2. Di halaman Index.php Panggil session_start();
+
+3. Cek Session Login di Index.php
+
+        if (!isset($_SESSION["login"])) {
+            header("Location: Login.php");
+        }
+
+    Penjelasan :
+    jika session login belum ada (user belum melakukan login maka lempar ke halaman Login.php)
+
+4-6. Lakukan Cek Session Login di Update.php Hapus.php Tambah.php
+
+7. Cek Session jika sudah Login di Login.php
+
+        if ( isset($_SESSION["login"])){
+            header("Location: Index.php");
+            exit;
+        }
+
+    Penjelasan :
+    jika session login sudah ada (user sudah melakukan login dan mencoba ke halaman login) maka paksa lempar ke halaman Index.php
+
+8. Membuat File Logout.php
+
+        session_start();
+        $_SESSION = [];
+        session_unset();
+        session_destroy();
+
+        header("Location: Login.php");
+        exit;
+
+    Penjelasan :
+    Mulai Session dan kemudian hapus dan hilangkan session yang ada kemudian lempar user ke halaman Login.php
+    > session_start();   // Memulai Session
+    > $_SESSION = [];    // Ditimpa dengan Array kosong supaya yakin Sessionnya Hilang
+    > session_unset();   // Menghilangkan Session
+    > session_destroy(); // Hapus Session
+
+9. Membuat Hyperlink untuk Logout di halaman Index.php
+
+        <a href="Logout.php">Logout</a>

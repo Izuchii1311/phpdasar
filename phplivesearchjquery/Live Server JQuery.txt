@@ -1,0 +1,133 @@
+----- Folder Pertemuan 20 -----
+
+Di Pertemuan sebelumnya telah menambahkan fitur live search.
+Live search = pencarian instan ketika kita mencari data berdasarkan keyword tertentu.
+            Misalkan dalam inputan pencarian kita baru menuliskan kata 'A' maka otomatis akan dilakukan proses AJAX ke sebuah sumber dan sumber itu akan menghasilkan pencariannya
+            Maka data akan berubah dan yang akan tampil data yang memiliki huruf 'A'
+
+
+Penjelasan Materi sebelumnya
+
+    Pada file index.php
+
+    <form action="" method="post">
+        <input type="text" name="keyword" size="30" autofocus placeholder="Cari Mahasiswa!" autocomplete="off" id="keyword">
+        <button type="submit" name="cari" id="tombol-cari">Cari</button>
+    </form>
+
+    * Memiliki sebuah form dimana terdapat sebuah inputan dan button
+    Untuk inputan menggunakan fitur live search maka di dalam input AJAX yang berjalan. 
+    Sedangkan button untuk melakukan Submit data maka PHP yang akan berjalan
+
+
+
+    <div id="container">
+        <table border="1" cellpadding="20" cellspacing="0">
+            <tr>
+                <th>No.</th>
+            ...
+        ...
+    </div>
+
+    * Div dengan Id container, dibuat untuk menampung data hasil permintaan kita ke AJAX.
+    Jadi kita akan memiliki file sumber yang dimana akan dikembalikan oleh AJAX ke dalam wadahnya / container
+    File mekanisme untuk memproses hasil pencarian ajax/mahasiswa.php
+
+
+
+    * Proses AJAX berada di Folder JS/script.JS
+
+    var keyword = document.getElementById('keyword');
+    var tombolCari = document.getElementById('tombol-cari');
+    var container = document.getElementById('container');
+    keyword.addEventListener('keyup', function() {
+        var xhr = new XMLHttpRequest();
+        // cek kesiapan AJAX
+        xhr.onreadystatechange = function() {
+            if ( xhr.readyState == 4 && xhr.status == 200) {
+                container.innerHTML = xhr.responseText;
+            }
+        }
+        xhr.open('GET', 'ajax/mahasiswa.php?keyword=' + keyword.value, true);
+        xhr.send();
+    });
+
+    * Menambahkan sebuah Even pada saat kita mengetikkan sesuatu di dalam kolom pencarian
+    Supaya even tersebut menjadi trigger pemanggilan AJAX
+    Yang dimana mengambil respon dari sumber (mahasiswa.php) dan simpan di dalam container (index.php)
+    jadi mengganti isi dari container yang berada di (index.php)
+
+
+
+
+JQuery (Java Script)
+
+> Download JQuery (jquery.com/download/)
+> Download the compressed, production jQuery 3.6.1
+> Simpan di Folder JS (nama tidak diubah)
+
+1. Panggil Library JQuery
+    *Sebelum script yg lainnya 
+
+        <script src="js/jquery-3.6.1.min.js"></script>
+
+2. Hapus semua syntax yang berada di dalam file script.js
+
+3. Buat Di dalam Folder JS
+
+    --- 1. AJAX - even ketika keyword ditulis (Script.js)
+    $(document).ready(function() {
+            $('#container').load('ajax/mahasiswa.php?keyword=' + $('#keyword').val());
+        });
+    });
+
+
+    --- 2. Hilangkan Tombol Cari (Script.js)
+    $(document).ready(function() {
+
+        //2. Hilangkan Tombol Cari
+        $('#tombol-cari').hide();
+
+            $('#container').load('ajax/mahasiswa.php?keyword=' + $('#keyword').val());
+        });
+    });
+
+
+    --- 3. Menambahkan Loader (Index.php)
+        Di dalam Form setelah button
+        <img src="img/Loader.gif" alt="" class="loader">
+
+    --- 4. Mengatur Posisi dari Loader (Index.php)
+        Memberikan Style dan mengatur Posisinya
+
+    --- 5. Ketika Document Index Dibuka Loader tidak muncul dan button cari disembunyikan & ketika user mengetikkan sesuatu maka loader akan ditampilkan
+
+    $(document).ready(function() {
+        $('#tombol-cari').hide();
+       
+            $('#keyword').on('keyup', function() {
+                $('.loader').show();
+
+                $.get('ajax/mahasiswa.php?keyword=' + $('#keyword').val(), function(data) {
+                    $('#container').html(data);
+                });
+            });
+    });
+
+
+    --- 6. Jika User tidak menginputkan seusatu maka loader di sembunyikan
+    
+    $(document).ready(function() {
+        $('#tombol-cari').hide();
+       
+            $('#keyword').on('keyup', function() {
+                $('.loader').show();
+
+                $.get('ajax/mahasiswa.php?keyword=' + $('#keyword').val(), function(data) {
+                    $('#container').html(data);
+                    
+                    // 6. Sembunyikan Loader jika data sudah ditemukan
+                    $('.loader').hide();
+                });
+            });
+    });

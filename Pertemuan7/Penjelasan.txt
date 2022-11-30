@@ -1,0 +1,173 @@
+Request Method GET & POST --9
+
+
+Superglobals adalah variabel spesial yang dimiliki oleh PHP
+
+    Variabel Scope (Lingkup dari Sebuah Variabel di dalam PHP)
+
+    Apa Itu Variabel Scope?
+
+        Misalkan;
+
+           $x = 10;
+
+           function tampilX() {
+                $x = 20;
+                echo $x;
+           }
+
+           tampilX();
+           echo $x;
+
+
+        Penjelasan 
+
+        $x = 10 itu adalah sebuah variabel local untuk halaman itu
+        sedangkan di dalam function tampilX
+            ada $x = 20 itu adalah sebuah variabel local untuk functionnya saja
+
+        *jadi keduanya variabel local namun memiliki perbedaan, dan jika variabel local untuk halaman di panggil di dalam function maka tidak akan bisa karena sudah berbeda lingkup variabelnya.
+
+
+
+            $x = 10;
+
+            function tampilX() {
+                global $x;
+                echo $x;
+            }
+
+            tampilX();
+
+
+        Penjelasan
+
+        Agar sebuah function dapat memanggil variabel di luar function. Maka berikan 
+                                    global $x; 
+        yang artinya mencari atau mengambil nilai di luar function.
+        maka echo akan menampilkan $x yang berada di luar function yaitu 10.
+
+
+
+Variabel Superglobals = Adalah variabel variabel yang dimiliki PHP yang dapat kita akses dimana pun dan kapanpun di halaman PHP kita.
+
+    Variabel Superglobals yang dimiliki PHP (dan Semuanya adalah "Array Assosiatif")
+        > $_GET
+            (Metode Request) -- $_GET adalah sebuah array yang kosong yang datanya dikirim lewat url
+
+                Contoh Sederhana :
+
+                    $_GET ["nama"] = "Luthfi";
+                    var_dump($_GET);
+
+
+                * tanda tanya di dalam url artinya : Saya akan memasukkan data ke halaman ini dan dimasukkan ke variabel $_GET
+
+                    Contoh :
+                    
+                        localhost/phpdasar/Pertemuan7/Get.php?nama=Luthfi
+
+                        *Artinya saya akan memasukkan sebuah data yang key nya (nama) valuenya (Luthfi) ke dalam variabel $_GET
+                        Artinya mengirimkan data ke halaman ini menggunakan metode request GET yang datanya akan dikirim di url dan data tersebut akan ditangkap oleh variabel Superglobals $_GET
+                        
+                        %20 = "Spasi"
+
+                    Contoh 2 :
+
+                        localhost/phpdasar/Pertemuan7/Get.php?nama=Luthfi&npm=2142430
+
+                        *Artinya saya memasukkan sebuah data yg key nya ada (nama) dan (npm) dengan valuenya (Luthfi) dan (2142430) ke dalam variabel $_GET
+
+            Kegunaan $_GET apa?
+                Dengan Get kita bisa tau detail info user di contoh KasusGet.php
+                    Melakukan pengiriman data di href 
+                        Contoh :
+
+                            Di KasusGet.php
+
+                                Didalam tag a / hyperlink lakukan pengiriman data
+
+                                    <a href="KasusGet2.php?nama=<?= $mhs ["nama"]; ?>">Nama : <?= $mhs["nama"] ?></a>
+
+
+                            Kemudian Dihalaman KasusGet2.php
+
+                                Didalam tag li panggil / tangkap data yang telah dikirimkan di KasusGet
+
+                                    <li><?= $_GET["nama"]; ?></li>
+
+                            Kesimpulan : nama yang berada di halaman KasusGet dapat di klik dan ketika user mengkliknya maka akan berpindah halaman, kemudian data yang berada di KasusGet dikirimkan dan dipanggil atau ditangkap datanya di KasusGet2.php kemudian jalankan variabel Superglobalsnya
+                            Intinya mengirimkan data variabel dan menangkapnya di page lain.
+                            & Jika langsung masuk ke KasusGet2.php maka akan error karena harus melalui KasusGet.php terlebih dahulu
+
+
+
+        > $_POST
+            (Metode Request) datanya dikirim lewat Form, dan harus mempunya form terlebih dahulu sebelum menggunakan method $_POST
+
+                Keuntungannya : misalkan kita mengirimkan data melalui form, maka jika menggunakan Metode Request POST datanya tidak akan muncul di URl dan itu sangat penting. Misalkan untuk sistem Log-in
+            
+                    Contoh Sederhana : 
+                    Halaman KasusPost.php
+                    
+
+                    <form action="KasusPost2.php" method="post">
+                        <label for="nama">Masukkan Nama :   </label>
+                        <input type="text" name="nama" id="nama">
+                        <br><br>
+                        <button type="submit" name="submit">Kirim</button>
+                    </form>
+
+
+                    Penjelasan :
+                    Action diisi dengan halaman lain misal KasusPost2.php, jika actionnya dikosongkan maka datanya akan dikirimkan ke halaman itu sendiri.
+                    dan Methodnya diisi dengan (metode requestnya) misal post
+
+                    *Membuat sebuah form, yang form ini menggunakan metode requestnya POST. dan semua data di dalam formnya akan dikirimkan ke halaman KasusPost2.php
+
+
+
+                    Halaman KasusPost2.php
+
+
+                    <!-- 2. Memanggil nama dari form yang berada di halaman KasusPost.php -->
+                    <!-- dan isinya sesuaikan dengan name yang berada di inputannya -->
+                    <h2>Selamat Datang, <?= $_POST["nama"] ?>!</h2>
+
+
+                    Penjelasan : 
+                    Data yang dikirim ke halaman KasusPost2 tidak akan muncul di url nya dan datanya disembunyikan dibelakang layar
+
+                    Perbedaanya GET Data akan berada di URL, POST Data tidak akan berada di url
+
+
+
+        > $_REQUEST
+        > $_SESSION
+        > $_COOKIE
+        > $_SERVER
+        > $_ENV
+
+
+
+Isset adalah untuk mengecek apakah sebuah variabel sudah dibikin atau belum
+    Contoh :
+
+            // Function Isset
+        if (!isset($_GET["nama"])) {
+            // redirect
+        header("Location: KasusGet.php");
+        exit;
+        }
+
+        Penjelasan :
+        *apakah ( isset($_GET["nama"])) sudah pernah dibikin?
+                jika (!isset(...)) tandanya belum dibikin
+        *jika belum pernah dibuat maka lemparkan user ke halaman index atau halaman utama yang memiliki variabel
+        *diberikan exit supaya script di bawahnya tidak dieksekusi
+
+
+Untuk menghubungkan label dengan text fieldnya di dalam label berikan for dan di dalam text field berikan id
+    Misalkan :
+        <label for="username">Username</label>
+            <input type="text" name="username" id="username">

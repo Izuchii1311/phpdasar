@@ -1,0 +1,130 @@
+CRUD --13
+
+UPADATE DATA DARI DATABASE
+
+1. Membuat Halaman Update.php
+
+2. Aksi di dalam halaman Index.php
+
+    <a href="Update.php?id=<?= $mhs["id"]?>">EDIT</a>
+
+    Penjelasan :
+        Menghubungkan dengan halaman Update.php dan memanggil id dari setiap data yang berada di dalam database
+
+3. Di dalam halaman Update.php melakukan copy paste dari halaman Tambah.php
+
+    if( isset($_POST["submit"]) ) {
+        if ( update($_POST) > 0) {
+            echo 
+            "<script>
+                alert('Data Berhasil Diubah!');
+                document.location.href = 'Index.php';
+            </script>";
+        } else {
+            echo 
+            "<script>
+                alert('Data Gagal Diubah!');
+                document.location.href = 'Index.php';
+            </script>";
+        }
+    }
+
+    Penjelasan :
+        Perbaiki function yang asalnya tambah menjadi update, dan output dari alert diubah juga
+
+4. Mengubah Judul judul di halaman Update.php
+
+5. Di dalam Halaman Update.php
+
+    $id = $_GET["id"];
+
+    Penjelasan : 
+        Untuk Mengambil data dari Id yang berada di URL
+
+6. Memanggil data mahasiswa berdasarkan Idnya
+
+    $dataId = query("SELECT * FROM mahasiswa WHERE id = $id")[0];   
+
+    Penjelasan : 
+        Membuat variabel, yang di dalamnya melakukan function query dan memanggil data menggunakan Id.
+        Hasil dari function query berupa array numerik, karena di dalam function query terdapat $rows yang berfungsi sebagai wadah kosong
+        maka diibaratkan sebagai, Data di bungkus dengan array kosong (numerik), yang di dalam array tersebut ada data data nya berupa array (assosiatif).
+        
+        Maka Untuk Melakukan Debugging dengan cara:
+
+            var_dump($dataId["npm"]);
+
+7. Menambahkan artibut value di halaman Update.php dan lakukan ke semua element input
+
+    <input type="text" name="nama" id="nama" required value="<?= $dataId["nama"]?>"> 
+
+    Penjelasan :
+        Menambahkan value dengan memanggil variabel $dataId yang berisi data dari mahasiswa yang dipanggil menggunakan id
+
+8. Membuat function update di Function.php
+
+    function update($data) {
+        global $conn;
+        $nama = htmlspecialchars($data["nama"]);
+        $npm = htmlspecialchars($data["npm"]);
+        $email = htmlspecialchars($data["email"]);
+        $jurusan = htmlspecialchars($data["jurusan"]);
+        $gambar = htmlspecialchars($data["gambar"]);
+
+        $query = "INSERT INTO mahasiswa VALUES('', '$nama', '$npm', '$email', '$jurusan', '$gambar')";
+        mysqli_query($conn, $query);
+
+        return mysqli_affected_rows($conn);
+    }
+
+    Penjelasan :
+        Copy Paste dari function tambah dan lakukan perubahan pada $query. Karena jika INSERT INTO untuk menambahkan data, maka ganti menjadi 
+        UPADATE, Seperti ini :
+
+        $query = "UPDATE mahasiswa SET npm= '$npm', nama= '$nama', email= '$email', jurusan= '$jurusan', gambar= '$gambar' WHERE id = $id";
+
+            Penjelasan $query :
+                UPDATE data dari tabel mahasiswa dan ubah npm, nama, email, jurusan, gambar 
+                note : sebenernya tidak diubah hanya ditimpa datanya jika langsung UPDATE mahasiswa SET npm.... maka semua data akan diubah
+                alangkah lebih baiknya berikan WHERE id = $id 
+
+9. Di dalam Update.php
+    
+    <input type="hidden" name="id" value="<?= $dataId["id"];?>">
+
+    Penjelasan : 
+        Diluar ul atau awal dari form berikan sebuah input yg dihilangkan dengan memberikan data id yang akan dipanggil di halaman Functions.php
+         
+        maka tambahkan seperti ini di function update
+
+        function update($data){
+            global $conn;
+            $id = $data["id"];
+            $nama = htmlspecialchars($data["nama"]);    
+            $npm = htmlspecialchars($data["npm"]);
+            $email = htmlspecialchars($data["email"]);
+            $jurusan = htmlspecialchars($data["jurusan"]);
+            $gambar = htmlspecialchars($data["gambar"]);
+
+            $query = "UPDATE mahasiswa SET npm= '$npm', nama= '$nama', email= '$email', jurusan= '$jurusan', gambar= '$gambar' WHERE id = $id";
+            mysqli_query($conn, $query);
+
+            return mysqli_affected_rows($conn);        
+        }
+
+
+
+Catatan :
+
+        $query = "INSERT INTO mahasiswa VALUES('', '$nama', '$npm', '$email', '$jurusan', '$gambar')";
+
+        $query = "UPDATE mahasiswa SET npm= '$npm', nama= '$nama', email= '$email', jurusan= '$jurusan', gambar= '$gambar'  WHERE id = $id";
+
+
+        Penjelasan antar ke 2nya
+        $query yang pertama berada di dalam function tambah yang dimana melakukan INSERT data atau menambahkan data ke tabel mahasiswa
+        dan data yang ditambahkan berupa id nama npm email jurusan dan gambar
+
+        sedangkan
+        $query yang ke 2 berada di dalam function update yang dimana melakukan update data, dan data diambil berdasarkan id maka data tersebut yang hanya di ubah berupa npm nama email jurusan dan gambar.
+        karena data dipanggil menggunakan id maka id pun tidak boleh bisa diubah.

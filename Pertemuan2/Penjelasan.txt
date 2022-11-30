@@ -1,0 +1,135 @@
+Syntax Dasar PHP - 4
+
+Konsep Pemrogramannya ada di Video Java Script - WPU
+
+
+===== Tag PHP =====
+        <?php
+            // Syntax php disini
+        ?>
+
+
+
+===== Komentar PHP (ctrl + /) =====
+        *komentar adalah syntax pemrograman yang tidak akan dieksekusi baik oleh compiler atau interpreter
+            digunakan untuk menjelaskan fungsi dari baris baris codenya atau digunakan untuk mematikan baris codenya
+        
+        <?php
+            // Komentar 1 - Dalam 1 baris
+
+            /* Komentar 2
+            Dapat lebih dari 1 baris
+            */
+        ?>
+
+
+
+===== Standar Output =====
+        echo atau print = digunakan untuk mencetak tulisan, variabel, dsb
+                            * dapat menggunaan "" atau ''
+        print_r         = khusus digunakan untuk mencetak isi array, dapat untuk debugging
+        var_dump        = digunakan untuk melihat isi dari variabel, akan menampilkan informasi dari variabel tersebut, dapat untuk debugging
+                            *menampilkan informasi yang ditampilkan itu tipe datanya apa & ukurannya berapa 
+
+
+
+===== Penulisan Syntax PHP & HTML =====
+        1. PHP di dalam HTML
+            Contoh :
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <title>PHP di dalam HTML</title>
+                </head>
+                <body>
+                    <h1> Hello <?php echo "World"; ?> </h1>
+                </body>
+                </html>
+
+        2. HTML di dalam PHP (Tidak disarankan)
+            Contoh :
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <title>PHP di dalam HTML</title>
+                </head>
+                <body>
+                    <?php
+                        echo "<h1> Hello World </h1>";
+                    ?>
+                </body>
+                </html>
+
+
+===== Variabel & Tipe Data =====
+Variabel diberi tanda $
+Namanya tidak boleh diawali oleh angka, namun boleh mengandung angka
+Misalkan :
+    <?php
+        $nama = "Luthfi";
+    ?>
+
+    <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <title>PHP di dalam HTML</title>
+        </head>
+        <body>
+            <h1> Hello <?php $nama ?> </h1>
+        </body>
+        </html>
+        *Jadi nama Luthfi berada di dalam variabel nama
+
+
+===== Operator =====
+> Aritmatika 
+    + - * / %
+    Misalkan :
+        echo 1 + 1;
+
+        --Hasilnya akan 2
+
+> Penggabung String (Concatenation / Concat)
+    .
+    Misalkan :
+        $nama_depan = "Luthfi ";
+        $nama_belakang = "Nur Ramadhan";
+
+        echo $nama_depan . " " . $nama_belakang;
+
+        --Hasilnya akan Luthfi Nur Ramadhan
+
+> Assignment
+    =, +=, -=, *=, /=, %=, .=
+    Misalkan :
+        $x = 1;
+        $x += 5;
+
+        echo $x;
+
+        --Hasilnya akan 6
+
+> Perbandingan (Tidak mengecek tipe datanya tetapi hanya mengecek nilainya)
+    <, >, <=, >=, ==, !=
+    Misalkan :
+        var_dump(1 < "5");
+
+        --Hasilnya akan bool(true)
+
+> Identitas (Mengecek tipe datanya, jika tipe datanya berbeda maka akan False)
+    ===, !==
+    Misalkan :
+        var_dump(1 === "1")
+
+        --Hasilnya akan bool(false)
+
+> Logika
+    && (and)
+    || (or)
+    ! (not)
+    Misalkan :
+        $x = 10;
+
+        var_dump($x < 20 && $x % 2 == 0);
+
+        --Hasilnya akan bool(true)

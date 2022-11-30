@@ -1,0 +1,236 @@
+PHP & MySQL --11
+
+Untuk menghubungkan PHP dengan MySQL dapat dilakukan dengan beberapa cara
+1. Ekstensi MySQL               -- Fungsi fungsi di dalam PHP untuk memanipulasi MySQL 
+2. Ekstensi MySQLi              -- Fungsinya sama seperti MySQL, namun lebih baik(Akan Digunakan)
+3. PDO (PHP Data Object)        -- Driver untuk terhubung ke database dan dapat terhubung ke banyak database
+
+
+Project : 
+
+1. Membuat file baru Index.php (Halaman Utama Admin & akan dapat melakukan CRUD)
+    
+    1. Buat Header, dan Table (Front End Tampilannya)
+
+
+    2. Lakukan Koneksi ke database
+        koneksi ke database membutuhkan sebuah function dari PHP.
+        
+        mysqli_connect();
+
+        Isikan Parameternya yg pertama nama hostnya, yg ke 2 username localhostnya, yg ke 3 password, dan yang terakhir nama databasenya
+
+        Contoh Koneksi Ke database :
+
+                mysqli_connect("localhost", "root", "", "phplatihan");
+
+                Masukkan ke dalam variabel, jadi seperti ini
+
+                $conn = mysqli_connect("localhost", "root", "", "phplatihan");
+            
+
+    3.  Ambil data dari table yang ada di database 
+
+        mysqli_query();
+
+        Parameternya ada 2 (koneksi, querynya mau apa -- masukan syntax MySQL)
+
+        Contoh : 
+
+                mysqli_query($conn, "SELECT * FROM mahasiswa");
+
+
+            *Dengan menggunakan mysqli_query tidak akan menampilkan pesan error meskipun tabel database yang kita masukkan salah. 
+            Karena mysqli_query akan mengembalikkan query SQLnya dan mengembalikkan nilai true.
+            Namun jika gagal, maka dia tidak akan mengembalikkan nilai dan hasil nilainya false.
+
+            Masukkan ke dalam variabel
+
+                $result = mysqli_query($conn, "SELECT * FROM mahasiswa");
+
+                *jika ingin melakukan pengecekkan lakukan var_dump($result);
+
+
+    4. Mengambil object data dari dalam table mahasiswa
+        *Menggunakan fetch (ambil)
+
+         Ada 4 cara untuk mengambil datanya :
+         > mysqli_fetch_row()
+                Mengembalikkan Array Numerik -- Dan hanya 1 baris data tidak semua data
+
+                    Contoh Pemanggilan :
+
+                    $mhs = mysqli_fetch_row($result);
+                    var_dump($mhs[1]);
+
+
+                    *Masukkan ke dalam variabel
+                    panggil menggunakan mysqli_fetch_row
+                    cara cek meggunakan var_dump            (karena data : id, nama, npm, email, jurusan)
+                    maka saat di var_dump dan hasilnya adalah nama
+
+
+
+         > mysqli_fetch_assoc()
+                Mengembalikkan Array Assosiatif -- Dan hanya 1 baris data tidak semua data
+
+                    Contoh Pemanggilan :
+
+                    $mhs = mysqli_fetch_assoc($result);
+                    var_dump($mhs);
+
+
+
+         > mysqli_fetch_array()
+                Mengembalikkan Array Assosiatif dan Numerik -- Dan hanya 1 baris data tidak semua data
+
+                Contoh Pemanggilan :
+
+                    $mhs = mysqli_fetch_array($result);
+                    var_dump($mhs);
+
+
+                    *Kekurangannya adalah Menampilkan datanya dalam bentuk Array Assosiatif dan Array Numerik sehingga data double.
+
+
+         > mysqli_fetch_object()
+                Mengembalikkan Array tapi tidak memiliki key Assosiatif ataupun Numerik
+                
+                Contoh Pemanggilan :
+
+                    $mhs = mysqli_fetch_object($result);
+                    var_dump($mhs->nama);
+
+
+    5. Untuk menampilkan semua data menggunakan while pada mysqli_fetch_assoc
+
+        Contoh Penulisan : 
+
+            while ($mhs = mysqli_fetch_assoc($result) ) {
+            var_dump($mhs);
+            }
+
+
+    6. Lakukan pengambilan data di dalam table agar data yang di panggil dapat masuk ke dalam tabel
+
+        Contoh :
+
+            <?php while($row = mysqli_fetch_assoc($result)) :?>
+                <tr>    
+                    <td>1</td>
+                    <td>
+                        <a href="">EDIT</a> || <a href="">DELETE</a>
+                    </td>
+                    <td><?php echo $row["nama"]; ?></td>
+                    <td><?php echo $row["npm"]; ?></td>
+                    <td><?php echo $row["email"]; ?></td>
+                    <td><?php echo $row["jurusan"]; ?></td>
+                    <td><img src="img/<?php echo $row["gambar"]; ?>" alt="" width="50px" height="70px"></td>
+                </tr>
+            <?php endwhile; ?>
+
+
+            *lakukan while terhadap mysqli_fetch_assoc karena agar dapat memanggil semua data dari $result
+            di dalam td lakukan pemanggilan terhadap Array Assosiatif
+
+    
+    7. Lakukan Looping untuk id agar nomor id terurut
+
+        Contoh :
+            <?php $i=1; ?>
+            <?php while($row = mysqli_fetch_assoc($result)) :?>
+                <tr>    
+                    <td><?= $i; ?></td>
+                    <td>
+                        <a href="">EDIT</a> || <a href="">DELETE</a>
+                    </td>
+                    <td><?= $row["nama"]; ?></td>
+                    <td><?= $row["npm"]; ?></td>
+                    <td><?= $row["email"]; ?></td>
+                    <td><?= $row["jurusan"]; ?></td>
+                    <td><img src="img/<?= $row["gambar"]; ?>" alt="" width="50px" height="70px"></td>
+                </tr>
+            <?php $i++; ?>
+            <?php endwhile; ?>
+
+
+            *NOTE : SEBENERNYA DENGAN MENULISKAN SEPERTI INI
+                
+                <?php while($row = mysqli_fetch_assoc($result)) :?>
+
+            SANGAT LAH TIDAK EFEKTIF MAKA, DIBUAT LAH CARA YANG LEBIH MODULAR DAN EFEKTIF
+            Ada di halaman Functions.php dan Index.php
+
+
+            1. Buat Header, dan Table (Index.php)
+            2. Buat Koneksi ke database di (Functions.php)
+
+                $conn = mysqli_connect("localhost", "root", "", "phplatihan");
+
+            
+            3. Menghubungkan Functions.php dengan Index.php
+                Berikan require ini di Index.php
+
+                require "Functions.php";            
+
+            
+            4. Membuat function query dan panggil di dalam isi functionnya mau apa (Index.php)
+
+                query ("SELECT * FROM mahasiswa");
+
+
+            5. Membuat function query di (Functions.php)
+                Dengan nama query dan diberi variabel $query
+
+                function query($query){
+                    global $conn;
+                    $result = mysqli_query($conn, $query);
+
+                    $rows = [];
+                    while ($row = mysqli_fetch_assoc($result)){
+                        $rows[] = $row;
+                    }
+                    return $rows;
+                }
+
+                *Membuat Function dengan nama query dan membuat variabel $query
+                $result dari variabel tersebut lakukan ambil data dari 
+                    $conn di database dengan nama database phplatihan
+                    dan di halaman index di panggil function query dengan memanggil data dari tabel mahasiswa
+                    maka $query mengambil data mahasiswa yang telah dihubungkan di halaman Index.php
+
+                Kemudian buat variabel dengan nama rows yang berfungsi sebagai wadah kosong untuk menyimpan Array
+                kemudian lakukan looping dengan memanggil mysqli_fetch_assoc dari variabel hasil ($result)
+                yang kemudian dimasukkan ke dalam variabel baru yaitu $row
+                Maka lakukan perulangan while
+                    dengan variabel $row yang di dalamnya mysqli_fetch_assoc untuk mengambil data dari variabel $result
+                    selanjutnya data ditambahkan di array kosong yaitu $rows[] = lalu ambil dan masukkan data dari variabel $row
+
+                Kembalikan data yang telah di masukkan ke dalam $rows
+
+            
+            6. Masukkan function query yang dipanggil dari halaman Function ke dalam variabel
+
+                $mahasiswa = query ("SELECT * FROM mahasiswa");
+
+            7. Lalu di dalam table lakukan looping untuk memanggil array dari function yaitu foreach
+                Kemudian panggil data yang ingin di looping dari variabel $mahasiswa
+                
+                <?php $i=1; ?>
+                <?php foreach($mahasiswa as $mhs) : ?>
+                    <tr>    
+                        <td><?= $i; ?></td>
+                        <td>
+                            <a href="">EDIT</a> || <a href="">DELETE</a>
+                        </td>
+                        <td><?= $mhs["nama"]; ?></td>
+                        <td><?= $mhs["npm"]; ?></td>
+                        <td><?= $mhs["email"]; ?></td>
+                        <td><?= $mhs["jurusan"]; ?></td>
+                        <td><img src="img/<?= $mhs["gambar"]; ?>" alt="" width="50px" height="70px"></td>
+                    </tr>
+                <?php $i++; ?>
+                <?php endforeach; ?>
+
+                
+                

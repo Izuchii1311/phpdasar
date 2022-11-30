@@ -1,0 +1,126 @@
+COOKIE --19
+
+COOKIE sama seperti SESSION namun bedanya
+COOKIE = informasi disimpan di browser / client.
+SESSION = informasi disimpan di server.
+
+Pengunaan COOKIE :
+    1. Untuk mengenali user
+    2. Fitur Shopping Cart
+    3. Personalisasi / Prilaku dari seorang user (iklan)
+    4. Dan Lainnya
+
+$_COOKIE                                (Variabel Globals)
+setcookie(key, value, expire);          (Functions) 
+
+Cara cek cookie : Inspect >> Application >> Cookies
+
+
+1. Langkah Pertama Membuat Chechkbox untuk Remember Membuat (Login.php)
+
+        ...
+        <input type="checkbox" name="remember" id="remember">
+        <label for="remember">Remember Me!</label>
+        ...
+
+
+2. Cek Remember Me ketika ada yang melakukan ceklis di checkbox (Login.php)
+
+        ...
+            if ( isset($_POST["remember"]) ){
+                    setcookie('id', $row['id'], time() +600);
+                    ...
+            }
+        ...
+
+    Penjelasan :
+    Cek apakah ada yang melakukan ceklis di checkbox jika ada buat cookienya
+    nama cookienya id, yang kemudian mengambil valuenya dari variabel $row yang telah menampung data dalam database, kemudian beri waktu cookinya selama 10menit jika melebihi itu user harus login kembali
+
+
+3. Cek Cookienya jika masih ada, artinya user masih dapat masuk ke halaman index tanpa harus login lagi. (Login.php)
+
+            if ( isset($_COOKIE['login']) ) {
+                if ($_COOKIE['login'] == 'true'){
+                    $_SESSION['login'] = true;
+                }
+            }
+        ...
+        ...
+        if ( isset($_SESSION["login"])){
+            header("Location: Index.php");
+            exit;
+        }
+
+    Penjelasan : 
+    Cek Cookienya jika masih ada artinya user masih dapat masuk ke halaman index tanpa harus login lagi.
+    Cek cookinya jika ketika user mengklik button login.
+    samakan info loginnya dengan boolean jika 1 = true dan 0 = false, dan jika jika SESSION-nya true artinya jalankan langkah selanjutnya yaitu mengarahkan ke halaman index
+
+
+4. Melakukan Enkripsi Cookie (Login.php)
+
+        ...
+            // 2. Cek Remember me
+                if ( isset($_POST["remember"]) ){
+                    // Buat Cookie
+                    setcookie('id', $row['id'], time() +600);
+                    // 4. Enkripsi Cookie
+                    setcookie('key', hash('sha256', $row['username']), time() + 600);
+                }
+            ...
+        ...
+
+    Penjelasan :
+    Melanjutkan dari no 2
+    tambahkan setcookie dengan nama key yang kemudian memanggil username dari database yang login dan kemudian dilakukan enkripsi cookie menggunakan hash('sha256'), kemudian memberikan waktu cookienya selama 10 menit
+
+
+5. Cek cookie (ada tidak id dan key) (Login.php)
+
+        ...
+            // 5. Cek Cookie (ada ga cookie id dan isset cookie key)
+            if ( isset($_COOKIE['id']) && isset($_COOKIE['key']) ) {
+                // jika ada cek
+                $id = $_COOKIE['id'];
+                $key = $_COOKIE['key'];
+
+                // mencari data mahasiswa berdasarkan id supaya mendapatkan username dan usernamenya dibandingkan dengan key
+                $result = mysqli_query ($conn, "SELECT username FROM user WHERE id = $id");
+                $row = mysqli_fetch_assoc($result);
+
+                // Cek cookie dan username (sama atau tidak)
+                // key adalah username yang sudah diacak dan menyambungkan dengan username yang telah di hash dan di cek sama tidak
+                if ( $key === hash('sha256', $row['username'])){
+                    // jika benar, dan session loginnya ada maka akan langsung login dan pindah ke halaman index
+                    $_SESSION['login'] = true; 
+                }
+            }
+
+                // jika sessionnya ada (true), pindahkan langsung ke index.php
+            if ( isset($_SESSION["login"])){
+                header("Location: Index.php");
+                exit;
+            }
+        ...
+
+    Penjelasan : 
+    Menggantikan no 3
+    cek cookie id dan cookie key, jika ada cek sebelumnya masukkan ke dalam variabel agar mudah saat melakukan pemanggilan.
+    yang kemudian id dan key akan di cek dengan memanggil databasenya kemudian masukkan datanya ke dalam variabel $row
+    lalu cek cookienya apakah usernamenya sama atau tidak
+        (key isinya username yang telah di enkripsi, disini username dicek dan disamakan dengan di database)
+    jika benar username sama maka jalankan $_SESSION true;
+    jika SESSION-nya true artinya sessionnya masih ada dan lanjut pindahkan ke halaman Index.php
+
+
+6. Hapus Cookie (Logout.php)
+
+                // 6. Hapus Cookie ketika Logout
+        setcookie('id', '', time() - 3600);
+        setcookie('key', '', time() - 3600);
+
+
+    Penjelasan : 
+    Ketika user Logout maka cookie dari id dan keynya dikosongkan artinya tidak ada info cookie
+    dan berikan time - 3600 / 1 jam yang lalu. Karena jika cookienya waktu yang lampau maka user dipinta untuk login kembali

@@ -1,0 +1,114 @@
+REGISTRASI - SIGN UP --16
+
+Membuat Login System
+    > Registrasi
+    > Login
+    > Session
+    > Cookie
+
+Membuat Table di Database
+    > table 'user'
+    > Enkripsi Password
+
+
+1. Membuat Tampilan Halaman Registrasi
+
+2. Membuat Table Baru di database PhpLatihan
+    Nama Tabel : user  
+        id       => int (auto_increment)
+        username => varchar (25)
+        password => varchar (255)  *Diberikan nilai yang banyak karena pasword akan di enkripsikan menjadi text acak
+
+3. Mengelola Isi dari form
+
+        if ( isset($_POST["register"])){
+            ...
+        }
+
+    Penjelasan :
+    Data dirimkan ke halaman ini sendiri dan tidak di url, dan ketika button dengan nama register diklik maka jalankan
+
+4. Jalankan Fungsi Registrasi
+
+        ...
+            if( registrasi($_POST) > 0){
+                echo "<script>
+                    alert ('User Berhasil Ditambahkan!');
+
+                    </script>";
+                } else {
+                    echo mysqli_error($conn);
+                }
+        ...
+
+    Penjelasan :
+    Jika button di klik maka jalankan fungsi registrasi yang mengambil data dari $_POST jika registrasinya lebih besar dari 0 artinya ada userbaru yg masuk ke database.
+    Kalo fungsi registrasinya berhasil tampilkan alert berhasil dan jika gagal maka tampilkan pesan error dari $conn;
+
+5. Membuat Function Registrasi
+
+        function registrasi($data) {
+            global $conn;
+
+            $username = strtolower(stripslashes($data["username"]));
+            $password = mysqli_real_escape_string($conn, $data["password"]);
+            $password2 = mysqli_real_escape_string($conn, $data["password2"]);
+            ...
+
+        Penjelasan :
+        membuat function registrasi yang dapat menangkap data, function ini menerima inputan data yang dikirim dari $_POST dan kemudian ditangkap di function ini
+        Tangkap Data dan simpan ke dalam variabel
+        $username >> merubah username menjadi lower case dan agar tidak dapat ada nya simbol
+        $password >> memungkinkan user untuk memasukkan kutip di dalam passwordnya
+        
+6. Cek Konfirmasi Password
+
+        if ($password !== $password2) {
+            echo "<script>
+                alert ('Konfirmasi Password Tidak Sesuai');
+                </script";
+                return false;
+        } 
+
+        Penjelasan :
+        Jika Password tidak sama dengan password2 maka tampilkan alert error
+        return false maksudnya = 0 jika > dari 1 maka akan true dan berhasil
+
+7. Melakukan Enkripsi Password
+
+        $password = password_hash($password, PASSWORD_DEFAULT);
+
+        Penjelasan :
+        buat variabel password baru dimana password sebelumnya akan ditimpa dan diganti dengan password yang sudah diacak dan di enkripsikan
+
+8. Menambahkan Data Ke Database
+
+        mysqli_query($conn, "INSERT INTO user VALUES('', '$username', '$password')");
+
+        return mysqli_affected_rows($conn);
+
+        Penjelasan : 
+        mysqli_query untuk memasukkan data registrasi ke dalam tabel user di database
+        return untuk mengembalikan nilai dan jika nilai itu 1 maka data berhasil ditambahkan dan jika 0 tidak
+
+9. Cek username sudah terdaftar atau belum
+
+        ...
+        $result = mysqli_query($conn, "SELECT username FROM user WHERE username = '$username'");
+        
+        // jika menghasilkan nilai true maka sudah ada datanya di database dan ga boleh
+        if (mysqli_fetch_assoc($result)){
+            echo "<script>
+                alert ('Username Sudah Terdaftar!');
+                </script";
+            return false;
+        }
+        ...
+
+    Penjelasan :
+    panggil mysqli_query dan cek username (... WHERE username = '$username' ...)
+    dan masukkan ke dalam variabel $result cek kondisinya
+    cek jika fungsi $result menghasilkan nilai true maka tampilkan alertnya
+    mysqli_fetch_assoc = untuk memasukkan data ke dalam array Assosiatif dan cek dari $result jika ada maka alert ditampilkan
+
+    

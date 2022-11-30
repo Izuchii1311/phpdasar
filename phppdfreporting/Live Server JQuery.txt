@@ -1,0 +1,52 @@
+----- Folder Pertemuan 21 -----
+
+PDF Reporting 
+
+PHP to PDF
+    > Laporan
+    > Kuitansi / invoice / faktur
+    > Form isian
+    > ...
+
+Membuat PDF 
+    > Menggunakan fitur bawaan browser
+    > Library PHP
+        > FPDF
+        > mPDF
+        > DOMPDF
+        > ...
+
+Mengubah Halaman Index Menjadi PDF
+Mengambil data tabelnya saja dan aksinya tidak di bawa
+
+Caranya :
+1.Syntax CSS 
+    Syntax CSS yang berlaku ketika di print
+    CSS tolong panggil class berikut ketika user melakukan print class tersebut dihilangkan
+
+    ===== Index.php =====
+    <!-- Menambahkan Class -->      <a href="logout.php" class="logout">Logout</a>
+    <!-- Menambahkan Class -->      <a href="tambah.php" class="tambah">Tambah Data Mahasiswa</a><br><br>
+    <!-- Menambahkan class -->      <input type="text" name="keyword" size="30" autofocus placeholder="Cari Mahasiswa!" autocomplete="off" id="keyword" class="cari">
+    <!-- Menambahkan class -->      <th class="aksi">Aksi</th>
+    <!-- Menambahkan classs -->     <td class="aksi">    
+
+
+    === style ===
+        @media print {
+            .logout, .tambah, .cari, .aksi{ 
+                display: none;
+            }
+        }
+
+2. Mengenerate Ulang Halaman PDF menggunakan sebuah library mPDF
+    Visit (https://mpdf.github.io/)
+    Installation & Setup
+    Installation v7.x+
+
+    $ composer require mpdf/mpdf
+    buka cmd
+    arahkan ke folder phppdfreporting   (cd C:\xampp\htdocs\phpdasar)
+
+
+    Belum Beres Insall Composer Dulu

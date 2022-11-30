@@ -1,0 +1,49 @@
+LOGIN --17
+
+1. Membuat Tampilan Halaman LOGIN
+
+2. Cek Apakah button login sudah pernah ditekan atau belum
+
+        if ( isset($_POST["login"]) ){
+            
+            $username = $_POST["username"];
+            $password = $_POST["password"];
+
+            $result = mysqli_query($conn, "SELECT * FROM user WHERE username = '$username'");
+            if ( mysqli_num_rows($result) === 1 ) {
+                
+                $row = mysqli_fetch_assoc($result);
+                if (password_verify($password, $row["password"])){
+                
+                    header("Location: Index.php");
+                    exit;
+                }
+            }
+            $error = true;
+        }
+
+    Penjelasan : 
+    Cek apakah tombol login sudah pernah ditekan atau belum. Jika belum maka cek username dan password saat di klik buttonnya
+    Username dan Password yang dikirimkan ke $_POST panggil dan masukkan ke dalam variabel
+    1). Cek Username 
+        Melakukan pengecekan username apakah ada dan sama dengan username yang terdapat di database.
+        Jika Tidak sama maka akan langsung error atau menampilkan pesan error dan tidak pindah ke page selanjutnya.
+    2). Cek Username dan Password 
+        Setelah melakukan pengecekan Username, dan jika ada maka jalankan fungsi berikut ini
+        // Cek Password dan ambil password dari database 
+        Password diambil dan masukkan ke dalam variabel. Jika $password sama dengan password yang ada di database.
+        maka berhasil login (username dan password benar) dan dialihkan ke halaman Index.php
+
+        Note :
+        password_hash    = untuk mengacak string menjadi hash
+        password_verify  = untuk mengembalikan hash menjadi string
+
+
+3. Menampilkan Text Pesan error
+
+        <?php if( isset($error) ) : ?>
+            <p style="color: red; font-style:italic; ">Username / Password Salah!</p>
+        <?php endif; ?>
+
+    Penjelasan :
+    jika error maka tampilkan pesan error, dan pengecekan error dilihat dari atas $error

@@ -1,0 +1,181 @@
+CRUD --15
+
+UPLOAD File atau Gambar
+
+Fasilitas Upload ini adalah mengenai File Handling atau bagaimana cara kita menangani file dalam syntax php.
+    >   <input type="file" ... >
+    >   enctype (encoding type) 
+    >   $_FILES
+    >   function php move_uploaded_file (memindahkan file yang kita upload ke server)
+
+    *di dalam database sebenarnya kita dapat memasukkan gambar secara langsung dengan tipe datanya blob
+    (Binery Large Object) & tidak akan dilakukan karena akan membuat ukuran database menjadi sangat besar
+    dan database akan berat, dan juga karena kita bekerja dengan file tempatnya itu berada di dalam directori bukan
+    di dalam database.
+
+    Note : File akan diupload ke dalam directori sedangkan yang di insert ke dalam databasenya hanya nama filenya
+
+1. Merubah type dari input gambar menjadi file (Tambah.php)
+
+2. Merubah type dari input gambar menjadi file (Update.php)
+
+3. Menambahkan atribut enctype untuk mengelola gambar/file 
+
+        <form action="" method="post" enctype="multipart/form-data">
+
+        Penjelasan : Maka gambar tidak akan lagi dikelola oleh $_POST, dan akan dikelola oleh $_FILES (Array Assosiatif 2D)
+        Dimensi pertama : Nama Gambar
+        Dimensi kedua   : name (namafile)
+                          type (image)
+                          tmp_name (lokasi tempat penyimpanan sementara) maka nanti ada function move_uploaded_file untuk memindahkan file tersebut ke dalam file yang kita mau
+                          error (int (0/1))
+                          size (ukuran gambar)
+
+4. Memodifikasi function tambah supaya gambar diupload ke directory lalu diambil nama gambarnya, namanya yg kemudian di INSERT ke Database
+
+        $gambar = upload();
+    
+        Penjelasan :
+        $gambar jika berhasil maka akan diisi dengan nama gambar hasil dari fungsi upload
+        fungsi upload ini jika berhasil ada 2 hal yang pertama gambar diupload yang ke 2 akan mengirimkan nama gambar & jika gagal tidak ada akan data nama yang dikirimkan
+
+        if ( !$gambar ) {
+            return false;
+        }
+
+        Penjelasan : 
+        jika yang diuload bukan gambar maka akan data akan gagal dikirimkan dan karena false fungsi untuk insert ke database tidak akan dijalankan
+
+5. Menambahkan function upload (Functions.php)
+
+        function upload(){
+            $namaFile = $_FILES['gambar']['name'];
+            $ukuranFile = $_FILES['gambar']['size'];
+            $error = $_FILES['gambar']['error'];
+            $tmpName = $_FILES['gambar']['tmp_name'];
+
+            if ( $error === 4){
+                echo "<script>
+                    alert('Pilih Gambar Terlebih Dahulu!);
+                    </script>";
+                return false;
+            }
+
+            $ekstensiGambarValid = ['jpg', 'jpeg', 'png'];
+            $ekstensiGambar = explode('.', $namaFile);
+            $ekstensiGambar = strtolower(end($ekstensiGambar));
+
+            if ( !in_array($ekstensiGambar, $ekstensiGambarValid)) {
+                echo "<script>
+                    alert('Yang anda upload bukan gambar!);
+                    </script>";
+                return false;
+            }
+
+            if ( $ukuranFile > 1000000) {
+                echo "<script>
+                    alert('Ukuran gambar terlalu besar!);
+                    </script>";
+                return false;
+            }
+
+            // Lolos pengecekan gambar siap diupload
+            // generate nama baru
+            $namaFileBaru = uniqid();
+            $namaFileBaru .= '.';
+            $namaFileBaru .= $ekstensiGambar;
+
+            move_uploaded_file($tmpName, 'img/' . $namaFileBaru);
+            return $namaFileBaru;
+        }
+        
+
+            Penjelasan variables: 
+                karena di function tambah data telah di upload maka akan dikelola oleh variables superglobal $_FILES
+                Gambar dikelola oleh $_FILES dan berupa array assosiatif yang memiliki 2 Dimensi.
+                Panggil dan masukkan ke dalam variables
+                    $namaFile = variabel baru
+                    $_FILES = untuk mengambil data gambar yang disimpan sementara 
+                    ['gambar'] = nama dari inputannya
+                    ['name'] = nama gambar
+
+            Penjelasan if error :
+                Melakukan Pengecekkan ketika button di klik apakah ada gambar yang di upload atau tidak 
+                error 4 adalah untuk menampilkan error ketika tidak ada gambar yang diupload
+                jadi jika cek jika $error === 4 maka tampilkan pesan kesalahannya
+
+            Penjelasan file gambar :
+                di dalam $ekstensiGambarValid berisi sebuah array yang isinya tipe file
+                ketika gambar berhasil diambil, explode/pecah menjadi sebuah array dan masukkan ke dalam variabel $ekstensiGambar
+                    misal : Izuchii.jpg     >> explode >> [['Izuchii'], ['jpg']]
+                kemudian dari ekstensi gambar, end/ambil tipe datanya dan mengambilnya dari array yang palng terakhir kemudian masukkan ke dalam
+                variabel $ekstensiGambar
+                    misal : Gambar.hutao.PNG    >> explode>> [['Gambar'], ['hutao'], ['PNG']];
+                $ekstensiGambar hanya akan mengambil tipe gambarnya saja yaitu png dan strtolower untuk merubah dari yang asalnya
+                PNG menjadi png agar sesuai dengan array di $ekstensiGambarValid
+
+            Penjelasan cek ekstensi gambar :
+                melakukan cek di dalam sebuah string di dalam array, in_array(jarum, jerami)
+                ambil $ekstensiGambar dan kemudian cari di dalam $ekstensiGambarValid jika ada tipe gambar yang sama maka berhasil jika tidak
+                maka tampilkan pesan error
+
+            Penjelasan cek ukuran file :
+                jika $ukuranFile lebih dari 1000000 = 1mb maka tampilkan pesan 
+
+            Penjelasan jika lolos pengecekan :
+                Jika lolos pengecekan maka gambar akan diupload maka lakukan fungsi move_uploaded_file
+                move_uploaded_file atau pindahkan file yang asalnya berada di tmpName ke img/ dengan nama file baru yang telah dirubah menjadi unix id
+                agar tidak ada kesamaan nama gambar
+
+
+6. Merubah tipe inputan dan menghapus value untuk gambar di  (Update.php)
+
+        <input type="file" name="gambar" id="gambar" required>
+
+7. Menampilkan gambar sebelumnya saat edit data  (Update.php)
+
+        <img src="img/<?= $dataId['gambar']; ?>" alt="" width="100px" height="120px">
+
+8. Menambahkan atribut enctype untuk mengelola gambar  (Update.php)  
+
+        <form action="" method="post" enctype="multipart/form-data">
+
+9. Jika gambar tidak diganti maka akan menggunakan gambar lama (Update.php)
+
+        <input type="hidden" name="gambarLama" value="<?= $dataId["gambar"];?>">
+
+10. Merubah Functions update di (Functions.php)
+
+        ....
+        $gambarLama = htmlspecialchars($data["gambarLama"]);
+
+        // 10. Cek apakah user pilih gambar baru atau tidak
+        if ( $_FILES['gambar']['error'] === 4) {
+            // artinya tidak ada gambar baru maka diisi dengan gambar lama
+            $gambar = $gambarLama;
+        } else {
+            $gambar = upload();
+        }
+
+        $query = "UPDATE mahasiswa SET npm= '$npm', nama= '$nama', email= '$email', jurusan= '$jurusan', gambar= '$gambar' WHERE id = $id";
+        mysqli_query($conn, $query);
+
+        Penjelasan :
+            Membuat variabel baru untuk gambar lama dan hubungkan gambar lama dengan yang berada di halaman Update.php
+            $gambarLama mengambil gambar yang berada di database dan mengganti gambar sebelumnya.
+
+            Kelola gambar jika tidak ada yang dikirimkan, jika tidak ada maka $gambar = akan ditimpa oleh gambar sebelumnya di $gambarLama;
+            jika gambar akan dikirimkan file baru maka upload gambar ke database;
+
+
+
+
+
+
+
+
+
+Catatan : 
+    die; = berfungsi agar script di bawahnya tidak dijalankan
+    explode(delimiter, string); = untuk memecah sebuah string mejadi array
+    in_array = buat cek adakah sebuah string di dalam array
