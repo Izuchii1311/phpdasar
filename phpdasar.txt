@@ -1,0 +1,83 @@
+Langkah 1 -- PHP & MySQL
+- Melakukan Koneksi Ke Database
+- Membuat tampilan awal / table
+- Ambil Data
+- Menampilkan data dari database (loop)
+
+Langkah 2 -- Insert & Delete
+- Membuat halaman tambah.php
+- Melakukan query untuk insert data dan membuat feedback pesan
+- Membuat Fungsi Hapus 
+
+Langkah 3 -- Update
+- Value form sudah diisikan secara otomatis
+- Mengambil id dari form untuk melakukan query UPDATE berdasarkan id
+
+Langkah 4 -- Searching
+- Membuat form pencarian
+- Membuat function cari dengan menimpa data sebelumnya 
+- Dapat melakukan pencarian berdasarkan nama, npm, email, jurusan
+
+Langkah 5 -- Upload File
+- Mengelola (Input Type File, enctype)
+- Modifikasi function tambah (gambar di upload ke directory, nama gambar disimpan ke database)
+- Cek ekstensi file
+- Membatasi ukuran gambar. 
+NOTE : JIKA GAMBAR DIATAS 3MB MAKA AKAN TETAP MASUK KE DATABASE NAMUN DI INDEX TIDAK DITAMPILKAN GAMBARNYA
+
+- Simpan gambar ke file khusus dan nama gambar ke database
+- Generate nama gambar agar tidak duplikat / 2 gambar dengan nama yang sama
+- Kirim nama gambar lama jika user tidak mengirimkan gambar baru maka nama gambar lama yang akan dipakai
+
+Langkah 6 -- Registrasi Admin
+- Membuat database table user
+- Pengecekan username di db supaya tidak ada yang sama
+- cek konfirmasi password dan enkripsi
+
+Langkah 7 -- Login
+- Cek username dan password dari database jika sama maka akan login
+- Create Error Message
+
+Langkah 8 -- Session	
+- Membuat Session Halaman sebelum login
+- Membuat session login bagi user sudah login
+- Membuat Logout 
+
+Langkah 9 -- Cookie
+- Membuat Cookie
+- Set Waktu Cookie
+- Delete Cookie (Logout)
+NOTE: COOKIE TIDAK ADA KETIKA DI CLOSE CHROMENYA (PROBLEM)
+
+Langkah 10 -- Pagination
+- Membatasi data yang tampil
+- Membuat navigasi link untuk pindah page
+- Mengetahui halaman yang sedang aktif
+- Ketika halaman aktifnya berapa, maka data yang akan ditampilkan dari mana
+- Tampilan Jika Halaman Kosong / tidak ada data
+- Nomor berubah ketika berpindah page
+- Membuat Next and Previous page
+NOTE: KETIKA MELAKUKAN PENCARIAN PAGINATION AKAN HILANG	
+
+Langkah 11 -- Live Search AJAX
+Sinkron proses request respon yang membuat refresh pada halamannya.
+Asinkron prosesnya tanpa merefresh halaman hanya mengirimkan bagian tertentunya saja.
+AJAX (Js Dasar, Document Object Model (DOM))
+Duplikat Pertemuan 9
+- Dapat Melakukan pencarian tanpa klik button cari / Live Search
+- Membuat Folder ajax
+
+Langkah 12 -- Live Search jQuery
+- Download jQuery
+- script.js hapus dan ganti dengan syntax jQuery	
+- Menghapus button cari
+- memberikan loader ketika mengetikkan sesuatu loader muncul
+
+
+
+
+
+
+
+
+
